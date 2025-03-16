@@ -1,3 +1,3 @@
 ## go-summarize
+Video summarization pipeline, currently only supports transcription
 
-Go based video summarization pipeline.
