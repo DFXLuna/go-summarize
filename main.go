@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/humilityai/hdbscan"
 	"github.com/samber/lo"
 	"github.com/urfave/cli/v2"
 )
@@ -107,6 +108,21 @@ summarization of the chunks
 				})
 				fmt.Printf("Row %d: %.2f\n", i, distances[i])
 			})
+			// replace with https://github.com/mpraski/clusters
+			clustering, err := hdbscan.NewClustering(distances, 1)
+			if err != nil {
+				return err
+			}
+			clustering = clustering.Verbose()
+
+			err = clustering.Run(hdbscan.EuclideanDistance, hdbscan.VarianceScore, true)
+			if err != nil {
+				return err
+			}
+
+			for i, c := range clustering.Clusters {
+				fmt.Printf("Cluster %d: %+v\n", i, *c)
+			}
 
 			return nil
 		},
